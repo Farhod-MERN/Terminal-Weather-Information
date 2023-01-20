@@ -1,9 +1,10 @@
 import getArgs from "./helpers/args.js";
-import { getWeather } from "./services/api.service.js";
+import { getIcon, getWeather } from "./services/api.service.js";
 import {
   printError,
   printSuccess,
   printHelp,
+  printWeather,
 } from "./services/log.services.js";
 import { getKeyValue, saveKeyValue, TOKEN_DICTIONARY } from "./services/storage.service.js";
 
@@ -35,10 +36,11 @@ const saveCity = async (city) => {
 };
 
 const getForcast = async ()=>{
-  const city = process.env.CITY ?? (await getKeyValue(TOKEN_DICTIONARY.city))
+  const city = process.env.CITY ?? (await getKeyValue(TOKEN_DICTIONARY.city)) ?? "London"
   try{
     const response = await getWeather(city)
-    console.log(response);
+    printWeather(response, getIcon(response.weather[0].icon))
+    
   }catch(error){
     if(error?.response?.status == 404){
       printError("City not found !")
