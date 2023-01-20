@@ -5,7 +5,7 @@ import {
   printSuccess,
   printHelp,
 } from "./services/log.services.js";
-import { saveKeyValue, TOKEN_DICTIONARY } from "./services/storage.service.js";
+import { getKeyValue, saveKeyValue, TOKEN_DICTIONARY } from "./services/storage.service.js";
 
 const saveToken = async (token) => {
   if (!token.length) {
@@ -20,10 +20,24 @@ const saveToken = async (token) => {
     printError(error.message);
   }
 };
+const saveCity = async (city) => {
+  if (!city.length) {
+    printError("City doesn't exist");
+    return;
+  }
+
+  try {
+    await saveKeyValue(TOKEN_DICTIONARY.city, city);
+    printSuccess("City was saved successfully");
+  } catch (error) {
+    printError(error.message);
+  }
+};
 
 const getForcast = async ()=>{
+  const city = process.env.CITY ?? (await getKeyValue(TOKEN_DICTIONARY.city))
   try{
-    const response = await getWeather(process.env.CITY ?? "London")
+    const response = await getWeather(city)
     console.log(response);
   }catch(error){
     if(error?.response?.status == 404){
@@ -40,29 +54,17 @@ const getForcast = async ()=>{
 
 const startCLI = () => {
   const args = getArgs(process.argv);
-  // console.log(process.argv);
-  // console.log(process.env);
 
-  // console.log(args);
-
-  // help
   if (args.h) {
-    printHelp();
+    return printHelp();
   }
 
-  // save
   if (args.s) {
-    console.log("Save");
+    return saveCity(args.s)
   }
-  // sava token
   if (args.t) {
     return saveToken(args.t);
   }
-  getForcast()
+  return getForcast()
 };
 startCLI();
-
-// https://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid=96b947a45d33d7dc1c49af3203966408
-// const KEY = '96b947a45d33d7dc1c49af3203966408'
-// https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
-//  667faa295a4445729e3385ff583326ee

@@ -1,6 +1,6 @@
 const getArgs = (args) => {
   const res = {};
-  //     executer, file
+  
   const [first, second, ...rest] = args;
 
   rest.forEach((value, index, array) => {

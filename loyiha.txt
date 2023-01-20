@@ -28,3 +28,48 @@ getWeather(process.env.CITY ?? "London")
             if(error.response.status == 404)
         }
     }
+
+// https://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid=96b947a45d33d7dc1c49af3203966408
+// const KEY = '96b947a45d33d7dc1c49af3203966408'
+// https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
+//  667faa295a4445729e3385ff583326ee    
+
+--------------------------------------------
+axiosning o'rniga 
+
+import https from "https"
+
+// https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
+//  ae22f571d12c63bcd0e043bcde2445b4
+
+ // const url = new URL('https://api.openweathermap.org/data/2.5/weather?q=Tashkent&appid=ae22f571d12c63bcd0e043bcde2445b4')
+    // // url.searchParams.append('q', city)
+    // // url.searchParams.append('appid', token)
+    // // url.searchParams.append('lang', 'en')
+    // // url.searchParams.append('units', 'metric')
+
+    // https.get(url, (response)=>{
+    //     let res = ''
+    //     response.on("data", (chunk) =>{
+    //         res += chunk
+    //     })
+    //     response.on("end", ()=>{
+    //         console.log(res);
+    //     })
+    // })
+
+
+const saveKeyValue = async (key , value)=>{
+    let data = {}
+
+    if(await isExist(filePath)){
+        const file = await fs.promises.readFile(filePath)
+        data = JSON.parse(file)
+    }
+
+    data[key] = value
+    await fs.promises.writeFile(filePath, JSON.stringify(data)) // promises bizga ketma ket ishlashga yordam beradi
+}
+
+
+   
